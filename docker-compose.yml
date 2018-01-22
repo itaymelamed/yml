@@ -23,7 +23,7 @@ services:
      - GRID_TIMEOUT=300
      - GRID_BROWSER_TIMEOUT=300
  
-   hub3:
+  hub3:
     image: selenium/hub
     ports:
     - "4446:4446"
@@ -32,7 +32,7 @@ services:
      - GRID_BROWSER_TIMEOUT=300
      - GRID_HUB_PORT=4446
 
-   chrome:
+  chrome:
     image: selenium/node-chrome-debug
     ports:
      - "5900"
@@ -46,7 +46,7 @@ services:
     cpu_count: 1
     mem_limit: 2G
 
-   chrome2:
+  chrome2:
     image: selenium/node-chrome-debug
     ports:
      - "5900"
@@ -60,7 +60,7 @@ services:
     cpu_count: 1
     mem_limit: 2G
 
-   chrome3:
+  chrome3:
     image: selenium/node-chrome-debug
     ports:
      - "5900"
@@ -74,14 +74,14 @@ services:
     cpu_count: 1
     mem_limit: 2G
 
-   logger:
+  logger:
     image: minutemedia/logger
     ports:
      - "4000:4000"
     links:
      - mongo
   
-   proxy:
+  proxy:
     image: qautomatron/docker-browsermob-proxy
     ports:
       - "32300:9090"
