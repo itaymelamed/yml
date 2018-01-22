@@ -1,0 +1,90 @@
+version: "2.2"
+
+services:
+
+  mongo:
+    image: mongo:3.3
+    ports:
+     - "32001:27017"
+
+  hub1:
+    image: selenium/hub
+    ports:
+     - "4444:4444"
+    environment:
+     - GRID_TIMEOUT=300
+     - GRID_BROWSER_TIMEOUT=300
+
+  hub2:
+    image: minutemedia/hub2
+    ports:
+    - "4445:4445"
+    environment:
+     - GRID_TIMEOUT=300
+     - GRID_BROWSER_TIMEOUT=300
+ 
+   hub3:
+    image: selenium/hub
+    ports:
+    - "4446:4446"
+    environment:
+     - GRID_TIMEOUT=300
+     - GRID_BROWSER_TIMEOUT=300
+     - GRID_HUB_PORT=4446
+
+   chrome:
+    image: selenium/node-chrome-debug
+    ports:
+     - "5900"
+    depends_on:
+     - hub1
+    environment:
+     - HUB_PORT_4444_TCP_ADDR=hub1
+     - HUB_PORT_4444_TCP_PORT=4444
+    volumes:
+    - /dev/shm:/dev/shm
+    cpu_count: 1
+    mem_limit: 2G
+
+   chrome2:
+    image: selenium/node-chrome-debug
+    ports:
+     - "5900"
+    depends_on:
+     - hub2
+    environment:
+     - HUB_PORT_4444_TCP_ADDR=hub2
+     - HUB_PORT_4444_TCP_PORT=4445
+    volumes:
+    - /dev/shm:/dev/shm
+    cpu_count: 1
+    mem_limit: 2G
+
+   chrome3:
+    image: selenium/node-chrome-debug
+    ports:
+     - "5900"
+    depends_on:
+     - hub3
+    environment:
+     - HUB_PORT_4444_TCP_ADDR=hub3
+     - HUB_PORT_4444_TCP_PORT=4446
+    volumes:
+    - /dev/shm:/dev/shm
+    cpu_count: 1
+    mem_limit: 2G
+
+   logger:
+    image: minutemedia/logger
+    ports:
+     - "4000:4000"
+    links:
+     - mongo
+  
+   proxy:
+    image: qautomatron/docker-browsermob-proxy
+    ports:
+      - "32300:9090"
+      - "32500-32600:32500-32600"
+    environment:
+      - PORT_RANGE=32500-32600
